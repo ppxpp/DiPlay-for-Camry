@@ -49,9 +49,22 @@ class FeedbackRecordsActivity : ComponentActivity(), AppAppearanceOwner {
         render()
     }
 
+    private val statusRefresh = object : Runnable {
+        override fun run() {
+            render()
+            handler.postDelayed(this, 1500)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        render()
+        handler.removeCallbacks(statusRefresh)
+        handler.post(statusRefresh)
+    }
+
+    override fun onPause() {
+        handler.removeCallbacks(statusRefresh)
+        super.onPause()
     }
 
     override fun onDestroy() {
