@@ -38,7 +38,7 @@ internal object FeedbackUploader {
         val metaHeader = "--$boundary\r\n" +
             "Content-Disposition: form-data; name=\"meta\"\r\n" +
             "Content-Type: application/json; charset=utf-8\r\n\r\n"
-        val bundleHeader = "--$boundary\r\n" +
+        val bundleHeader = "\r\n--$boundary\r\n" +
             "Content-Disposition: form-data; name=\"bundle\"; filename=\"diplay-feedback-${meta.id}.zip\"\r\n" +
             "Content-Type: application/zip\r\n\r\n"
         val closing = "\r\n--$boundary--\r\n"
