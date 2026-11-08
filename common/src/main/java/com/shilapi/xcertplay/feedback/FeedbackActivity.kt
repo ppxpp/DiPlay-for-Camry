@@ -547,6 +547,7 @@ class FeedbackActivity : ComponentActivity(), AppAppearanceOwner {
             submit()
             return
         }
+        FeedbackOutbox.markRetryable(this, id, "manual_retry")
         statusView?.setTextColor(palette.primaryText)
         statusView?.text = getString(R.string.feedback_uploading)
         FeedbackScheduler.schedule(this, immediate = true)
