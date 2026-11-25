@@ -310,6 +310,9 @@ object HotspotProbeHelper {
 
     private fun saveCreationState(journal: File, state: org.json.JSONObject) {
         val temp=File(journal.path+".tmp")
+        // The app writes this same temp path; delete any stale file so an interrupted
+        // root write cannot block either side with a foreign owner.
+        check(temp.delete() || !temp.exists()) { "Stale hotspot creation temp cannot be removed" }
         FileOutputStream(temp).use { it.write(state.toString().toByteArray());it.fd.sync() }
         Os.chmod(temp.path,384);Os.chown(temp.path,Os.stat(journal.parentFile!!.path).st_uid,-1)
         check(temp.renameTo(journal)) { "Cannot persist hotspot creation state" }

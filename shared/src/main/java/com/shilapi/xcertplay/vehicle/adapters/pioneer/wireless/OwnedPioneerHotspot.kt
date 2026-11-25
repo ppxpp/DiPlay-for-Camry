@@ -308,6 +308,9 @@ internal class OwnedPioneerHotspot(private val context: Context, @Volatile priva
     }
     private fun save() {
         val tmp=File(journal.path+".tmp")
+        // A root-side write killed before its chown leaves a foreign-owned tmp that the app
+        // cannot truncate; unlink needs only directory permission, so delete any stale file first.
+        check(tmp.delete() || !tmp.exists()) { "Stale vehicle hotspot lease temp cannot be removed" }
         FileOutputStream(tmp).use { it.write(checkNotNull(state).toString().toByteArray());it.fd.sync() }
         Os.chmod(tmp.path,384);check(tmp.renameTo(journal)) { "Cannot persist vehicle hotspot lease" }
     }
